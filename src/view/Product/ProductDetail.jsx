@@ -101,6 +101,33 @@ class ProductDetail extends React.Component {
         })
     }
 
+    fileUploadHandler = () => {
+        let formData = new FormData();
+        formData.append(
+            "file",
+            this.state.selectedFile,
+            this.state.selectedFile.name
+        );
+        formData.append("productData", JSON.stringify(this.state.arrProduct))
+        console.log(formData);
+
+        Axios.post(`${API_URL}/productsWeekendTask`, formData)
+            .then((res) => {
+                console.log(res.data);
+                
+            })
+            .catch((err) => {
+                console.log("ERROR");
+                
+                console.log(err);
+            });
+    };
+
+    download = () => {
+        window.open(`${API_URL}/documents/download/tower.png`);
+    };
+
+
     ShowAllProductHandler = () => {
         return (
             <div>
@@ -122,7 +149,9 @@ class ProductDetail extends React.Component {
                                     <td>{index + 1}</td>
                                     <td>{val.productName}</td>
                                     <td>{val.price}</td>
-                                    <td>{val.image}</td>
+                                    <td>
+                                        <img src={val.image} alt=""/>
+                                    </td>
                                     <td>
                                         <button onClick = {() => this.DeleteProductHandler(val.id)}>Delete</button>
                                     </td>
@@ -150,6 +179,8 @@ class ProductDetail extends React.Component {
                 <br />
                 <input type="text" placeholder="Price" onChange={(e) => this.InputProductHandler(e, "price")} />
                 <br />
+                <button  placeholder="upload" onClick = {this.fileUploadHandler} > Upload </button>
+                <br/>
                 <input type="file" onChange={this.FileChangeHandler} />
                 <br/>
                 <button onClick={this.AddProductHandler}>Add Product</button>
